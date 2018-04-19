@@ -55,6 +55,7 @@ architecture tb of adc_tb is
         rst_n: in std_logic;
         eoc: in std_logic;
         den: out std_logic;
+        drdy: in std_logic;
         daddr: out std_logic_vector(6 downto 0);
         dwe: out std_logic;
         dout: in std_logic_vector(15 downto 0);
@@ -90,6 +91,7 @@ begin
         rst_n => rst_n,
         eoc => eoc,
         den => den,
+        drdy => drdy,
         daddr => daddr,
         dwe => dwe,
         dout => do,

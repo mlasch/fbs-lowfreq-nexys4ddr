@@ -27,6 +27,7 @@ entity psc is
         rst_n: in std_logic;
         eoc: in std_logic;
         den: out std_logic;
+        drdy: in std_logic;
         daddr: out std_logic_vector(6 downto 0);
         dwe: out std_logic;
         dout: in std_logic_vector(15 downto 0);
@@ -38,7 +39,7 @@ entity psc is
 end psc;
 
 architecture Behavioral of psc is
-    type bus_state is (idle, setup, read);
+    type bus_state is (idle, setup, rdywait, read);
     signal cstate, nstate: bus_state;
 
     signal sample: std_logic_vector(9 downto 0);
@@ -69,7 +70,7 @@ begin
         end if;
     end process;
 
-    next_state: process(cstate, eoc)
+    next_state: process(cstate, eoc, drdy)
     begin
         case cstate is
             when idle =>
@@ -77,7 +78,11 @@ begin
                     nstate <= setup;
                 end if;
             when setup =>
-                nstate <= read;
+                nstate <= rdywait;
+            when rdywait =>
+                if drdy = '1' then
+                    nstate <= read;
+                end if;
             when read =>
                 nstate <= idle;
         end case;
@@ -89,6 +94,7 @@ begin
            sample <= (others => '0');
            daddr <= (others => '0');
            dwe <= '0';
+           den <= '0';
            
         elsif rising_edge(clk_in) then
             case cstate is
@@ -98,9 +104,10 @@ begin
                     daddr <= 7x"10";
                     dwe <= '0';
                     den <= '1';
+                when rdywait =>
+                    den <= '0';
                 when read =>
                     sample <= dout(15 downto 6);  -- read 12-bit sample from bus
-                    
                 when others =>
                     null;
            end case;
