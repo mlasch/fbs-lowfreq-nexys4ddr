@@ -11,10 +11,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -42,24 +39,14 @@ architecture Behavioral of psc is
     type bus_state is (idle, setup, rdywait, read);
     signal cstate, nstate: bus_state;
 
-    signal sample: std_logic_vector(9 downto 0);
-    --signal trigger: std_logic;
+    signal sample: std_logic_vector(8 downto 0);
+    
+    signal serial_buffer: std_logic_vector(8 downto 0);
+    signal serial_cnt: unsigned(3 downto 0);
+    signal clk_div_en: std_logic;
+    signal clk_div_cnt: integer range 0 to 1000;
 begin
-
-    
---    trigger0: process (clk_in, rst_n)
---    begin
---        if rst_n = '0' then
---            trigger <= '0';
-            
---        elsif rising_edge(clk_in) then
---            if cstate = idle then 
---                if eoc = '1' then
---                trigger <= '1';
---        end if;
---    end process;
-
-    
+ 
     state_machine: process (clk_in, rst_n)
     begin
         if rst_n = '0' then
@@ -107,11 +94,68 @@ begin
                 when rdywait =>
                     den <= '0';
                 when read =>
-                    sample <= dout(15 downto 6);  -- read 12-bit sample from bus
+                    sample <= dout(15 downto 7);  -- read 12-bit sample from bus
                 when others =>
                     null;
            end case;
         end if;
     end process;
+    
+    -- bla
+    sync_clk_div: process(clk_in, rst_n)
+    begin
+        if rst_n = '0' then
+            clk_div_en <= '0';
+            clk_div_cnt <= 0;
+            
+        elsif rising_edge(clk_in) then
+            if clk_div_cnt >= 399 then
+                clk_div_en <= '1';
+                clk_div_cnt <= 0;
+            else
+                clk_div_en <= '0';
+                clk_div_cnt <= clk_div_cnt + 1;
+            end if;
+        end if;
+    end process;
+
+    shift_reg: process(clk_in, rst_n)
+    begin
+        if rst_n = '0' then
+            serial_buffer <= (others => '0');
+            serial_cnt <= (others => '0');
+
+            s_out <= '0';
+            s_sync <= '0';
+            
+        elsif rising_edge(clk_in) then
+            if clk_div_en = '1' then
+          
+                if serial_cnt = 9 then
+                    
+                    serial_cnt <= (others => '0');
+                    
+                    -- load buffer
+                    serial_buffer <= 9x"100"; --<= sample;
+                    s_out <= '0';
+
+                else
+                
+                    s_out <= serial_buffer(8);
+                    serial_buffer <= std_logic_vector(shift_left(unsigned(serial_buffer), 1));
+                
+                    serial_cnt <= serial_cnt + 1;
+                    s_sync <= '0';
+                end if;
+                
+                if serial_cnt = 0 then
+                    s_sync <= '1';
+                else
+                    s_sync <= '0';
+                end if;
+            end if;
+        end if;
+    end process;
+
    
 end Behavioral;

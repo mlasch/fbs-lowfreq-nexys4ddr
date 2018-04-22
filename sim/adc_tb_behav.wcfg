@@ -10,15 +10,22 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="102528157fs"></ZoomEndTime>
-      <Cursor1Time time="1000000000fs"></Cursor1Time>
+      <ZoomStartTime time="2527075812fs"></ZoomStartTime>
+      <ZoomEndTime time="57927075813fs"></ZoomEndTime>
+      <Cursor1Time time="41925100000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="142"></ValueColumnWidth>
+      <ValueColumnWidth column_width="138"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="15" />
+   <WVObjectSize size="21" />
+   <wave_markers>
+      <marker label="" time="6099864468000" />
+      <marker label="" time="649575144000" />
+      <marker label="" time="99825042000" />
+      <marker label="" time="100000000000" />
+      <marker label="" time="21645100000" />
+   </wave_markers>
    <wvobject type="array" fp_name="/adc_tb/daddr">
       <obj_property name="ElementShortName">daddr[6:0]</obj_property>
       <obj_property name="ObjectShortName">daddr[6:0]</obj_property>
@@ -76,8 +83,33 @@
       <obj_property name="ObjectShortName">nstate</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/adc_tb/psc0/sample">
-      <obj_property name="ElementShortName">sample[9:0]</obj_property>
-      <obj_property name="ObjectShortName">sample[9:0]</obj_property>
+      <obj_property name="ElementShortName">sample[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sample[8:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/adc_tb/psc0/clk_div_cnt">
+      <obj_property name="ElementShortName">clk_div_cnt</obj_property>
+      <obj_property name="ObjectShortName">clk_div_cnt</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/adc_tb/psc0/clk_div_en">
+      <obj_property name="ElementShortName">clk_div_en</obj_property>
+      <obj_property name="ObjectShortName">clk_div_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/adc_tb/psc0/s_out">
+      <obj_property name="ElementShortName">s_out</obj_property>
+      <obj_property name="ObjectShortName">s_out</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/adc_tb/psc0/s_sync">
+      <obj_property name="ElementShortName">s_sync</obj_property>
+      <obj_property name="ObjectShortName">s_sync</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/adc_tb/psc0/serial_cnt">
+      <obj_property name="ElementShortName">serial_cnt[3:0]</obj_property>
+      <obj_property name="ObjectShortName">serial_cnt[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/adc_tb/psc0/serial_buffer">
+      <obj_property name="ElementShortName">serial_buffer[8:0]</obj_property>
+      <obj_property name="ObjectShortName">serial_buffer[8:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
 </wave_config>
