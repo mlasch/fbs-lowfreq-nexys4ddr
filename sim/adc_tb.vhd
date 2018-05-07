@@ -49,8 +49,17 @@ architecture tb of adc_tb is
     end component;
     
     component psc is
-    port
-        (
+        port (
+        clk_in: in std_logic;
+        rst_n: in std_logic;
+        sample: in std_logic_vector(8 downto 0);     
+        s_out : out STD_LOGIC;
+        s_sync : out STD_LOGIC
+    );
+    end component;
+    
+    component adc_interface is
+    port (
         clk_in: in std_logic;
         rst_n: in std_logic;
         eoc: in std_logic;
@@ -60,10 +69,20 @@ architecture tb of adc_tb is
         dwe: out std_logic;
         dout: in std_logic_vector(15 downto 0);
         din: out std_logic_vector(15 downto 0);
-
-        s_out : out STD_LOGIC;
-        s_sync : out STD_LOGIC
-        );
+        
+        sample_out: out std_logic_vector(8 downto 0)
+    );
+    end component;
+    
+    component spc is
+    port ( 
+            clk_in: in std_logic;
+            rst_n: in std_logic;
+            s_in: in std_logic;
+            s_sync: in std_logic;
+            sample_out: out std_logic_vector(8 downto 0);
+            sample_rdy: out std_logic
+    );
     end component;
     
      
@@ -80,12 +99,28 @@ architecture tb of adc_tb is
     signal eoc: std_logic;
     signal eos: std_logic;
     
+    signal sample_read, sample_write: std_logic_vector(8 downto 0);
+    signal sample_rdy: std_logic;
+    
+    signal golden_sig: std_logic;
+    signal golden_sync: std_logic;
+    
 begin
+    
 
     dclk <= not dclk after 5 ns;
     rst_n <= '0', '1' after 30 ns;
     
     psc0: psc
+    port map (
+        clk_in => dclk,
+        rst_n => rst_n,
+        sample => sample_read,
+        s_out => golden_sig,
+        s_sync => golden_sync
+    );
+   
+    adc_interface0: adc_interface
     port map (
         clk_in => dclk,
         rst_n => rst_n,
@@ -96,9 +131,18 @@ begin
         dwe => dwe,
         dout => do,
         din => di,
-        s_out => open,
-        s_sync => open
-   );
+        sample_out => sample_read
+    );
+    
+    spc0: spc
+    port map (
+        clk_in => dclk,
+        rst_n => rst_n,
+        s_in => golden_sig,
+        s_sync => golden_sync,
+        sample_out => sample_write,
+        sample_rdy => sample_rdy
+    );
     
     adc: xadc_wiz_0
     port map (
