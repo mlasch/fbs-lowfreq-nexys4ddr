@@ -36,6 +36,10 @@ entity toplevel is
         CLK100MHZ: in std_logic;
         SW: in std_logic_vector(15 downto 0);
         vauxn3, vauxp3, vauxn10, vauxp10, vauxn2, vauxp2, vauxn11, vauxp11: in std_logic;
+        
+        aud_pwm: out std_logic;
+        aud_sd: out std_logic;
+        
         LED: out std_logic_vector(15 downto 0)
     );
 
@@ -52,8 +56,8 @@ architecture Behavioral of toplevel is
             drdy_out        : out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
             dclk_in         : in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
             reset_in        : in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
-            vauxp2          : in  STD_LOGIC;                         -- Auxiliary Channel 5
-            vauxn2          : in  STD_LOGIC;
+            vauxp3          : in  STD_LOGIC;                         -- Auxiliary Channel 5
+            vauxn3          : in  STD_LOGIC;
             busy_out        : out  STD_LOGIC;                        -- ADC Busy signal
             channel_out     : out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
             eoc_out         : out  STD_LOGIC;                        -- End of Conversion Signal
@@ -101,6 +105,16 @@ architecture Behavioral of toplevel is
     );
     end component;
     
+    component pwm is
+        port (
+            clk_in: in std_logic;
+            rst_n: in std_logic;
+            sample_in: in std_logic_vector(8 downto 0);
+            pwm_out: out std_logic
+            
+        );
+    end component;
+    
     signal rst_n: std_logic;
     
     signal daddr: std_logic_vector(6 downto 0);
@@ -127,6 +141,9 @@ architecture Behavioral of toplevel is
     rst_n <= SW(0);
     led(8 downto 0) <= sample_write; --<= sample_read;
     
+    aud_sd <= '1';
+    led(15) <= '1';
+    
     psc0: psc
     port map (
         clk_in => CLK100MHZ,
@@ -144,6 +161,14 @@ architecture Behavioral of toplevel is
         s_sync => golden_sync,
         sample_out => sample_write,
         sample_rdy => sample_rdy
+    );
+    
+    pwm0: pwm
+    port map(
+        clk_in => CLK100MHZ,
+        rst_n => SW(0),
+        sample_in => sample_write,
+        pwm_out => aud_pwm
     );
     
     adc_interface0: adc_interface
@@ -172,8 +197,8 @@ architecture Behavioral of toplevel is
         drdy_out => drdy,       --: out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
         dclk_in => CLK100MHZ,        --: in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
         reset_in => not SW(0),       --: in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
-        vauxp2 => vauxp2,         --: in  STD_LOGIC;                         -- Auxiliary Channel 3
-        vauxn2 => vauxn2,         --: in  STD_LOGIC;
+        vauxp3 => vauxp3,         --: in  STD_LOGIC;                         -- Auxiliary Channel 3
+        vauxn3 => vauxn3,         --: in  STD_LOGIC;
         busy_out => busy,        --: out  STD_LOGIC;                        -- ADC Busy signal
         channel_out => ch_mux,    --: out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
         eoc_out => eoc,        --: out  STD_LOGIC;                        -- End of Conversion Signal

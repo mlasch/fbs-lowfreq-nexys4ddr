@@ -99,13 +99,13 @@ begin
                 when idle =>
                     den <= '0';
                 when setup =>
-                    daddr <= 7x"12";
+                    daddr <= 7x"13";
                     dwe <= '0';
                     den <= '1';
                 when rdywait =>
                     den <= '0';
                 when read =>
-                    sample_buffer <= dout(15 downto 7);  -- read 12-bit sample from bus
+                    sample_buffer <= dout(15 downto 7);  -- read 9-bit sample from bus
                 when others =>
                     null;
            end case;
