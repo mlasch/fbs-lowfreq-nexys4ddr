@@ -99,7 +99,7 @@ begin
                 when idle =>
                     den <= '0';
                 when setup =>
-                    daddr <= 7x"10";
+                    daddr <= 7x"12";
                     dwe <= '0';
                     den <= '1';
                 when rdywait =>

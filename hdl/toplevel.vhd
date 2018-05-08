@@ -2,9 +2,20 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/13/2018 10:36:07 PM
+-- Create Date: 05/07/2018 10:27:57 AM
 -- Design Name: 
--- Module Name: adc_tb - Behavioral
+-- Module Name: toplevel - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
 ----------------------------------------------------------------------------------
 
 
@@ -20,34 +31,39 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity adc_tb is
---  Port ( );
-end adc_tb;
-
-architecture tb of adc_tb is
-    component xadc_wiz_0 is
-       port
-       (
-        daddr_in        : in  STD_LOGIC_VECTOR (6 downto 0);     -- Address bus for the dynamic reconfiguration port
-        den_in          : in  STD_LOGIC;                         -- Enable Signal for the dynamic reconfiguration port
-        di_in           : in  STD_LOGIC_VECTOR (15 downto 0);    -- Input data bus for the dynamic reconfiguration port
-        dwe_in          : in  STD_LOGIC;                         -- Write Enable for the dynamic reconfiguration port
-        do_out          : out  STD_LOGIC_VECTOR (15 downto 0);   -- Output data bus for dynamic reconfiguration port
-        drdy_out        : out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
-        dclk_in         : in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
-        reset_in        : in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
-        vauxp2          : in  STD_LOGIC;                         -- Auxiliary Channel 5
-        vauxn2          : in  STD_LOGIC;
-        busy_out        : out  STD_LOGIC;                        -- ADC Busy signal
-        channel_out     : out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
-        eoc_out         : out  STD_LOGIC;                        -- End of Conversion Signal
-        eos_out         : out  STD_LOGIC;                        -- End of Sequence Signal
-        alarm_out       : out STD_LOGIC;                         -- OR'ed output of all the Alarms
-        vp_in           : in  STD_LOGIC;                         -- Dedicated Analog Input Pair
-        vn_in           : in  STD_LOGIC
+entity toplevel is
+    port(
+        CLK100MHZ: in std_logic;
+        SW: in std_logic_vector(15 downto 0);
+        vauxn3, vauxp3, vauxn10, vauxp10, vauxn2, vauxp2, vauxn11, vauxp11: in std_logic;
+        LED: out std_logic_vector(15 downto 0)
     );
+
+end toplevel;
+
+architecture Behavioral of toplevel is
+    component xadc_wiz_0 is
+        port (
+            daddr_in        : in  STD_LOGIC_VECTOR (6 downto 0);     -- Address bus for the dynamic reconfiguration port
+            den_in          : in  STD_LOGIC;                         -- Enable Signal for the dynamic reconfiguration port
+            di_in           : in  STD_LOGIC_VECTOR (15 downto 0);    -- Input data bus for the dynamic reconfiguration port
+            dwe_in          : in  STD_LOGIC;                         -- Write Enable for the dynamic reconfiguration port
+            do_out          : out  STD_LOGIC_VECTOR (15 downto 0);   -- Output data bus for dynamic reconfiguration port
+            drdy_out        : out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
+            dclk_in         : in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
+            reset_in        : in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
+            vauxp2          : in  STD_LOGIC;                         -- Auxiliary Channel 5
+            vauxn2          : in  STD_LOGIC;
+            busy_out        : out  STD_LOGIC;                        -- ADC Busy signal
+            channel_out     : out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
+            eoc_out         : out  STD_LOGIC;                        -- End of Conversion Signal
+            eos_out         : out  STD_LOGIC;                        -- End of Sequence Signal
+            alarm_out       : out STD_LOGIC;                         -- OR'ed output of all the Alarms
+            vp_in           : in  STD_LOGIC;                         -- Dedicated Analog Input Pair
+            vn_in           : in  STD_LOGIC
+        );
     end component;
-    
+
     component psc is
         port (
         clk_in: in std_logic;
@@ -85,15 +101,14 @@ architecture tb of adc_tb is
     );
     end component;
     
-     
+    signal rst_n: std_logic;
+    
     signal daddr: std_logic_vector(6 downto 0);
     signal den: std_logic := '0';
     signal di: std_logic_vector(15 downto 0);
     signal dwe: std_logic := '1';
     signal do: std_logic_vector(15 downto 0);
     signal drdy: std_logic;
-    signal dclk: std_logic := '0';
-    signal rst_n: std_logic;
     signal busy: std_logic;
     signal ch_mux: std_logic_vector(4 downto 0);
     signal eoc: std_logic;
@@ -105,25 +120,36 @@ architecture tb of adc_tb is
     signal golden_sig: std_logic;
     signal golden_sync: std_logic;
     
-begin
+    signal enable: std_logic;
     
-
-    dclk <= not dclk after 5 ns;
-    rst_n <= '0', '1' after 30 ns;
+    begin
+    
+    rst_n <= SW(0);
+    led(8 downto 0) <= sample_write; --<= sample_read;
     
     psc0: psc
     port map (
-        clk_in => dclk,
-        rst_n => rst_n,
-        sample => sample_read,
+        clk_in => CLK100MHZ,
+        rst_n => SW(0),
+        sample => do(15 downto 7), --sample_read,
         s_out => golden_sig,
         s_sync => golden_sync
     );
-   
+    
+    spc0: spc
+    port map (
+        clk_in => CLK100MHZ,
+        rst_n => SW(0),
+        s_in => golden_sig,
+        s_sync => golden_sync,
+        sample_out => sample_write,
+        sample_rdy => sample_rdy
+    );
+    
     adc_interface0: adc_interface
     port map (
-        clk_in => dclk,
-        rst_n => rst_n,
+        clk_in => CLK100MHZ,
+        rst_n => SW(0),
         eoc => eoc,
         den => den,
         drdy => drdy,
@@ -134,15 +160,7 @@ begin
         sample_out => sample_read
     );
     
-    spc0: spc
-    port map (
-        clk_in => dclk,
-        rst_n => rst_n,
-        s_in => golden_sig,
-        s_sync => golden_sync,
-        sample_out => sample_write,
-        sample_rdy => sample_rdy
-    );
+    
     
     adc: xadc_wiz_0
     port map (
@@ -152,10 +170,10 @@ begin
         dwe_in => dwe,         --: in  STD_LOGIC;                         -- Write Enable for the dynamic reconfiguration port
         do_out => do,         --: out  STD_LOGIC_VECTOR (15 downto 0);   -- Output data bus for dynamic reconfiguration port
         drdy_out => drdy,       --: out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
-        dclk_in => dclk,        --: in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
-        reset_in => not rst_n,       --: in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
-        vauxp2 => '0',         --: in  STD_LOGIC;                         -- Auxiliary Channel 5
-        vauxn2 => '0',         --: in  STD_LOGIC;
+        dclk_in => CLK100MHZ,        --: in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
+        reset_in => not SW(0),       --: in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
+        vauxp2 => vauxp2,         --: in  STD_LOGIC;                         -- Auxiliary Channel 3
+        vauxn2 => vauxn2,         --: in  STD_LOGIC;
         busy_out => busy,        --: out  STD_LOGIC;                        -- ADC Busy signal
         channel_out => ch_mux,    --: out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
         eoc_out => eoc,        --: out  STD_LOGIC;                        -- End of Conversion Signal
@@ -164,5 +182,5 @@ begin
         vp_in => '0',         --: in  STD_LOGIC;                         -- Dedicated Analog Input Pair
         vn_in => '0'         --: in  STD_LOGIC
     );
-end;
 
+end Behavioral;

@@ -16,6 +16,8 @@ vivado -mode batch -source generate\_project.tcl
 </code>
 
 ## Save Project
+First go into the project directory `cd [get_property DIRECTORY [current_project]]/..`. 
+
 
 <code>
 write\_project\_tcl -force generate\_project.tcl
