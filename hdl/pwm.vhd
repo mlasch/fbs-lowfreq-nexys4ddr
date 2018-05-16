@@ -35,9 +35,7 @@ entity pwm is
     port (
         clk_in: in std_logic;
         rst_n: in std_logic;
-        
         sample_in: in std_logic_vector(8 downto 0);
-        
         pwm_out: out std_logic
         
     );

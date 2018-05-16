@@ -82,7 +82,8 @@ begin
                     
                     -- load buffer
                     serial_buffer <= sample; --9x"100"; --<= sample;
-                    s_out <= '0';
+                    s_out <= '1';
+                    s_sync <= '1';
 
                 else
                 
@@ -93,11 +94,11 @@ begin
                     s_sync <= '0';
                 end if;
                 
-                if serial_cnt = 0 then
-                    s_sync <= '1';
-                else
-                    s_sync <= '0';
-                end if;
+--                if serial_cnt = 0 then
+--                    s_sync <= '1';
+--                else
+--                    s_sync <= '0';
+--                end if;
             end if;
         end if;
     end process;

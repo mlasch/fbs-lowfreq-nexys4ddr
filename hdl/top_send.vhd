@@ -9,7 +9,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity toplevel is
+entity top_send is
     port(
         -- clock
         CLK100MHZ: in std_logic;
@@ -20,12 +20,13 @@ entity toplevel is
         aud_sd: out std_logic;
         -- in/out
         SW: in std_logic_vector(15 downto 0);
-        LED: out std_logic_vector(15 downto 0)
+        LED: out std_logic_vector(15 downto 0);
+        data_out: out std_logic
     );
 
-end toplevel;
+end top_send;
 
-architecture rtl of toplevel is
+architecture rtl of top_send is
 
     component signal_source is
     port (
@@ -36,45 +37,45 @@ architecture rtl of toplevel is
         s_sync: out std_logic
     );
     end component;
-
-    component signal_sink is
-    port (
-        clk_in: in std_logic;
-        rst_n: in std_logic;
-        s_in: in std_logic;
-        s_sync: in std_logic;
-        pwm_out: out std_logic
+    
+    component modulator is
+    generic(
+        Teiler_2MHz: Integer:=24;
+        Teiler_250KHz: Integer:=199
     );
-    end component;
+    port(
+        CLK_100MHz: in std_logic;
+        data_in: in std_logic_vector(1 downto 0);
+        data_out: out std_logic
+    );
+    end component; 
    
     signal dummy_reset: std_logic := '1';     -- dummy signal for reset
-    
-    signal golden_data: std_logic;
-    signal golden_sync: std_logic;
+    signal s_data: std_logic;
+    signal s_sync: std_logic;
     
     begin
     --led(8 downto 0) <= do(15 downto 7); --<= sample_read;
     
     aud_sd <= '1';      -- enable audio output
     led(15) <= '1';     -- alive indicator
-   
+
+    
     source_0: signal_source
     port map(
         clk_in => CLK100MHZ,
         rst_n => dummy_reset,
         vaux_p => vauxp3,
         vaux_n => vauxn3,
-        s_out => golden_data,
-        s_sync => golden_sync
+        s_out => s_data,
+        s_sync => s_sync
     );
     
-    sink_0: signal_sink
-    port map(
-        clk_in => CLK100MHZ,
-        rst_n => dummy_reset,
-        s_in => golden_data,
-        s_sync => golden_sync,
-        pwm_out => aud_pwm
+    modulator_inst: modulator
+    port map (
+        CLK_100MHZ => CLK100MHZ,
+        data_in => s_sync & s_data,
+        data_out => data_out
     );
 
 end rtl;

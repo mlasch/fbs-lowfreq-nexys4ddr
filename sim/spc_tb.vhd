@@ -38,14 +38,13 @@ end spc_tb;
 architecture tb of spc_tb is
     component spc is
     port ( 
-        clk_in: std_logic;
-        rst_n: std_logic;
+        clk_in:in std_logic;
+        rst_n: in std_logic;
         
         s_in: in std_logic;
         s_sync: in std_logic;
         
-        sample_out: out std_logic_vector(8 downto 0);
-        sample_rdy: out std_logic
+        sample_out: out std_logic_vector(8 downto 0)
     );
     
     end component;
@@ -55,7 +54,6 @@ architecture tb of spc_tb is
     signal s_in: std_logic;
     signal s_sync: std_logic;
     signal sample_out: std_logic_vector(8 downto 0);
-    signal sample_rdy: std_logic;
     
     constant DELAY: time := 5 us;
     constant SAMPLE_TIME: time := 400*10 ns;    -- 4us -> 250 kHz
@@ -73,8 +71,7 @@ begin
         rst_n => rst_n,
         s_in => s_in,
         s_sync => s_sync,
-        sample_out => sample_out,
-        sample_rdy => sample_rdy
+        sample_out => sample_out
     );
 
 end;

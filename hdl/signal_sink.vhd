@@ -27,8 +27,7 @@ architecture rtl of signal_sink is
         rst_n: in std_logic;
         s_in: in std_logic;
         s_sync: in std_logic;
-        sample_out: out std_logic_vector(8 downto 0);
-        sample_rdy: out std_logic
+        sample_out: out std_logic_vector(8 downto 0)
     );
     end component;
     
@@ -38,7 +37,6 @@ architecture rtl of signal_sink is
         rst_n: in std_logic;
         sample_in: in std_logic_vector(8 downto 0);
         pwm_out: out std_logic
-        
     );
     end component;
     

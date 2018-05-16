@@ -36,8 +36,8 @@ architecture tb of adc_tb is
         drdy_out        : out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
         dclk_in         : in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
         reset_in        : in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
-        vauxp2          : in  STD_LOGIC;                         -- Auxiliary Channel 5
-        vauxn2          : in  STD_LOGIC;
+        vauxp3          : in  STD_LOGIC;                         -- Auxiliary Channel 5
+        vauxn3          : in  STD_LOGIC;
         busy_out        : out  STD_LOGIC;                        -- ADC Busy signal
         channel_out     : out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
         eoc_out         : out  STD_LOGIC;                        -- End of Conversion Signal
@@ -80,9 +80,20 @@ architecture tb of adc_tb is
             rst_n: in std_logic;
             s_in: in std_logic;
             s_sync: in std_logic;
-            sample_out: out std_logic_vector(8 downto 0);
-            sample_rdy: out std_logic
+            sample_out: out std_logic_vector(8 downto 0)
     );
+    end component;
+    
+    component pwm is
+        port (
+            clk_in: in std_logic;
+            rst_n: in std_logic;
+            
+            sample_in: in std_logic_vector(8 downto 0);
+            
+            pwm_out: out std_logic
+            
+        );
     end component;
     
      
@@ -104,7 +115,7 @@ architecture tb of adc_tb is
     
     signal golden_sig: std_logic;
     signal golden_sync: std_logic;
-    
+    signal pwm_out: std_logic;
 begin
     
 
@@ -140,9 +151,19 @@ begin
         rst_n => rst_n,
         s_in => golden_sig,
         s_sync => golden_sync,
-        sample_out => sample_write,
-        sample_rdy => sample_rdy
+        sample_out => sample_write
     );
+    
+    pwm0: pwm 
+    port map (
+         clk_in => dclk,
+         rst_n => rst_n,
+         
+         sample_in => sample_write,
+         
+         pwm_out => pwm_out
+         
+     );
     
     adc: xadc_wiz_0
     port map (
@@ -154,8 +175,8 @@ begin
         drdy_out => drdy,       --: out  STD_LOGIC;                        -- Data ready signal for the dynamic reconfiguration port
         dclk_in => dclk,        --: in  STD_LOGIC;                         -- Clock input for the dynamic reconfiguration port
         reset_in => not rst_n,       --: in  STD_LOGIC;                         -- Reset signal for the System Monitor control logic
-        vauxp2 => '0',         --: in  STD_LOGIC;                         -- Auxiliary Channel 5
-        vauxn2 => '0',         --: in  STD_LOGIC;
+        vauxp3 => '0',         --: in  STD_LOGIC;                         -- Auxiliary Channel 5
+        vauxn3 => '0',         --: in  STD_LOGIC;
         busy_out => busy,        --: out  STD_LOGIC;                        -- ADC Busy signal
         channel_out => ch_mux,    --: out  STD_LOGIC_VECTOR (4 downto 0);    -- Channel Selection Outputs
         eoc_out => eoc,        --: out  STD_LOGIC;                        -- End of Conversion Signal

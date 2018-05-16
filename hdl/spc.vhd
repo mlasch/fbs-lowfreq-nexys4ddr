@@ -3,44 +3,21 @@
 -- Engineer: 
 -- 
 -- Create Date: 04/25/2018 09:49:46 PM
--- Design Name: 
--- Module Name: spc - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
 ----------------------------------------------------------------------------------
 
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity spc is
     port ( 
         clk_in: in std_logic;
         rst_n: in std_logic;
-        
         s_in: in std_logic;
         s_sync: in std_logic;
-        
-        sample_out: out std_logic_vector(8 downto 0);
-        sample_rdy: out std_logic
+        sample_out: out std_logic_vector(8 downto 0)
     );
 end spc;
 
@@ -100,28 +77,28 @@ begin
                     
                     
                     serial_buffer <= (others => '0');
-                    sample_rdy <= '0';
     
                 when shiftin =>
-                    if clk_div_en = '1' then
-                        serial_buffer(0) <= s_in;
-                        
-                        for i in 0 to 7 loop
-                            serial_buffer(i+1) <= serial_buffer(i);
-                        end loop;
-                        
-                        if serial_cnt > 7 then
-                            serial_cnt <= (others => '0');
-                            nstate <= outbuf;
-                        else
-                            serial_cnt <= serial_cnt + 1;
+                    if s_sync = '0' then
+                        if clk_div_en = '1' then
+                            serial_buffer(0) <= s_in;
+                            
+                            for i in 0 to 7 loop
+                                serial_buffer(i+1) <= serial_buffer(i);
+                            end loop;
+                            
+                            if serial_cnt > 7 then
+                                serial_cnt <= (others => '0');
+                                nstate <= outbuf;
+                            else
+                                serial_cnt <= serial_cnt + 1;
+                            end if;
+        
                         end if;
-    
                     end if;
                 
                 when outbuf =>
                     out_buffer <= serial_buffer;
-                    sample_rdy <= '1';
                     
                     nstate <= sync;
                 when others =>
