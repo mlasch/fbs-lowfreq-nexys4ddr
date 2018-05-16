@@ -44,7 +44,7 @@ entity pwm is
 end pwm;
 
 architecture Behavioral of pwm is
-    signal pwm_counter: unsigned(8 downto 0);
+    signal pwm_counter: unsigned(10 downto 0);
     
 begin
     process(clk_in, rst_n)
@@ -55,16 +55,16 @@ begin
             
         elsif rising_edge(clk_in) then
             
-            if pwm_counter = 511 then
+            if pwm_counter = 2047 then
                 pwm_counter <= (others => '0');
             else
                 pwm_counter <= pwm_counter + 1;
             end if;
             
-            if pwm_counter < unsigned(sample_in) then
-                pwm_out <= '0';
-            else
+            if pwm_counter(10 downto 2) < unsigned(sample_in) then
                 pwm_out <= '1';
+            else
+                pwm_out <= '0';
             end if;
         end if;
     end process;
