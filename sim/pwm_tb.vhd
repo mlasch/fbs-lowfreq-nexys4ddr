@@ -55,7 +55,7 @@ end component;
 begin
     clk100mhz <= not clk100mhz after 5 ns;
     rst_n <= '0', '1' after 30 ns;
-    sample <= 9x"c8", 9x"12c" after 30 us, 9x"00f" after 60 us; -- c8 -> 200
+    sample <= 9x"c8", 9x"12c" after 30 us, 9x"00f" after 60 us, 9x"1ff" after 85 us; -- c8 -> 200
     pwm0: pwm
     port map(
         clk_in => clk100mhz,

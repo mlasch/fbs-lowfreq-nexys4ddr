@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="pwm_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="pwm_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="100000000001fs"></ZoomEndTime>
+      <Cursor1Time time="100000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="193"></NameColumnWidth>
+      <ValueColumnWidth column_width="89"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="5" />
+   <wvobject type="logic" fp_name="/pwm_tb/clk100mhz">
+      <obj_property name="ElementShortName">clk100mhz</obj_property>
+      <obj_property name="ObjectShortName">clk100mhz</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/pwm_tb/rst_n">
+      <obj_property name="ElementShortName">rst_n</obj_property>
+      <obj_property name="ObjectShortName">rst_n</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/pwm_tb/sample">
+      <obj_property name="ElementShortName">sample[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sample[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/pwm_tb/pwm0/pwm_counter">
+      <obj_property name="ElementShortName">pwm_counter[10:0]</obj_property>
+      <obj_property name="ObjectShortName">pwm_counter[10:0]</obj_property>
+      <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+      <obj_property name="CellHeight">100</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/pwm_tb/pwm_out">
+      <obj_property name="ElementShortName">pwm_out</obj_property>
+      <obj_property name="ObjectShortName">pwm_out</obj_property>
+   </wvobject>
+</wave_config>
