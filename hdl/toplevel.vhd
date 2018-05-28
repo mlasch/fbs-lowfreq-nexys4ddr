@@ -43,20 +43,38 @@ architecture rtl of toplevel is
         rst_n: in std_logic;
         s_in: in std_logic;
         s_sync: in std_logic;
+        sw: in std_logic_vector(2 downto 0);
         pwm_out: out std_logic
     );
     end component;
+    
+--    component fir_lowpass is
+--        port (
+--            clk_in: in std_logic;
+--            rst_n: in std_logic;
+--            h: in std_logic_vector(3 downto 0);
+--            x: in std_logic_vector(3 downto 0);
+--            p: out std_logic_vector(15 downto 0)
+--        );
+--    end component;
    
     signal dummy_reset: std_logic := '1';     -- dummy signal for reset
     
     signal golden_data: std_logic;
     signal golden_sync: std_logic;
     
+    signal pout: std_logic_vector(15 downto 0);
+    
+
+    
     begin
     --led(8 downto 0) <= do(15 downto 7); --<= sample_read;
     
     aud_sd <= '1';      -- enable audio output
-    led(15) <= '1';     -- alive indicator
+    --led(15) <= '1';     -- alive indicator
+   
+   
+    LED <= pout;
    
     source_0: signal_source
     port map(
@@ -74,7 +92,17 @@ architecture rtl of toplevel is
         rst_n => dummy_reset,
         s_in => golden_data,
         s_sync => golden_sync,
+        sw => SW(2 downto 0),
         pwm_out => aud_pwm
     );
+    
+--    fir_lowpass0: fir_lowpass
+--    port map(
+--        clk_in => CLK100MHZ,
+--        rst_n => dummy_reset,
+--        h => SW(3 downto 0),
+--        x => SW(7 downto 4),
+--        p => pout
+--    );
 
 end rtl;

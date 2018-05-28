@@ -32,10 +32,11 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity pwm is
+    generic(n: integer := 8);
     port (
         clk_in: in std_logic;
         rst_n: in std_logic;
-        sample_in: in std_logic_vector(8 downto 0);
+        sample_in: in std_logic_vector(n downto 0);
         pwm_out: out std_logic
         
     );
@@ -43,6 +44,7 @@ end pwm;
 
 architecture Behavioral of pwm is
     signal pwm_counter: unsigned(10 downto 0);
+    signal sample_buf: std_logic_vector(n downto 0);
     
 begin
     process(clk_in, rst_n)
@@ -50,16 +52,17 @@ begin
         if rst_n = '0' then
             pwm_out <= '0';
             pwm_counter <= (others => '0');
+            sample_buf <= (others => '0');
             
         elsif rising_edge(clk_in) then
-            
             if pwm_counter = 2047 then
                 pwm_counter <= (others => '0');
+                sample_buf <= sample_in;
             else
                 pwm_counter <= pwm_counter + 1;
             end if;
             
-            if pwm_counter(10 downto 2) < unsigned(sample_in) then
+            if pwm_counter(n+2 downto 2) < unsigned(sample_buf) then
                 pwm_out <= '1';
             else
                 pwm_out <= '0';
