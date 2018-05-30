@@ -6,19 +6,20 @@
       <db_ref path="dsp_tb_behav.wdb" id="1">
          <top_modules>
             <top_module name="dsp_tb" />
+            <top_module name="glbl" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="55350001fs"></ZoomEndTime>
-      <Cursor1Time time="5000fs"></Cursor1Time>
+      <ZoomEndTime time="300205373fs"></ZoomEndTime>
+      <Cursor1Time time="100000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="205"></NameColumnWidth>
-      <ValueColumnWidth column_width="126"></ValueColumnWidth>
+      <ValueColumnWidth column_width="118"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="5" />
+   <WVObjectSize size="7" />
    <wvobject type="logic" fp_name="/dsp_tb/clk_in">
       <obj_property name="ElementShortName">clk_in</obj_property>
       <obj_property name="ObjectShortName">clk_in</obj_property>
@@ -27,10 +28,6 @@
       <obj_property name="ElementShortName">rst_n</obj_property>
       <obj_property name="ObjectShortName">rst_n</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/dsp_tb/fir_lowpass0/p1">
-      <obj_property name="ElementShortName">p1[47:0]</obj_property>
-      <obj_property name="ObjectShortName">p1[47:0]</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/dsp_tb/fir_lowpass0/aout">
       <obj_property name="ElementShortName">aout[29:0]</obj_property>
       <obj_property name="ObjectShortName">aout[29:0]</obj_property>
@@ -38,5 +35,20 @@
    <wvobject type="array" fp_name="/dsp_tb/fir_lowpass0/pcout">
       <obj_property name="ElementShortName">pcout[47:0]</obj_property>
       <obj_property name="ObjectShortName">pcout[47:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/dsp_tb/fir_lowpass0/x1">
+      <obj_property name="ElementShortName">x1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">x1[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/dsp_tb/fir_lowpass0/h1">
+      <obj_property name="ElementShortName">h1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">h1[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/dsp_tb/fir_lowpass0/p1">
+      <obj_property name="ElementShortName">p1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">p1[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>
