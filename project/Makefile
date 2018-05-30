@@ -9,4 +9,6 @@ project:
 restore:
 	$(VIVADO) -mode batch -source generate\_project.tcl
 
+clean:
+	rm fbs_project/ -r
 all:

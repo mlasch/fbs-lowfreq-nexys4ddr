@@ -3,8 +3,3 @@
 *.log
 *.jou
 
-# Xilinx IP
-#hdl/*
-#!hdl/*
-#!hdl/xilinx_ip/*/*.xci
-#!hdl/xilinx_ip/xadc_wiz_0/*
