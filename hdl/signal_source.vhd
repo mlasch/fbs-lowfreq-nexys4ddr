@@ -124,7 +124,7 @@ begin
     port map (
         clk_in => clk_in,
         rst_n => rst_n,
-        sample => do(15 downto 7), --sample_read,
+        sample => do(15 downto 7), -- sample_read, --do(15 downto 7),
         s_out => s_out,
         s_sync => s_sync
     );

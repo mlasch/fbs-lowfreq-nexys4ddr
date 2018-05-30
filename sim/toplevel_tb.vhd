@@ -33,7 +33,10 @@ architecture tb of toplevel_tb is
 begin
 
     clk100mhz <= not clk100mhz after 5 ns;
-    rst_n <= '0', '1' after 30 ns;
+    rst_n <= '0', '1' after 1 us;
+    
+    sw(15) <= rst_n;
+    sw(0) <= '0', '1' after 1000 us;
 
     toplevel_test: toplevel
     port map(

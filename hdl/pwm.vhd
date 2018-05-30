@@ -3,19 +3,6 @@
 -- Engineer: 
 -- 
 -- Create Date: 05/08/2018 11:44:47 AM
--- Design Name: 
--- Module Name: pwm - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
 ----------------------------------------------------------------------------------
 
 
@@ -43,7 +30,7 @@ entity pwm is
 end pwm;
 
 architecture Behavioral of pwm is
-    signal pwm_counter: unsigned(10 downto 0);
+    signal pwm_counter: unsigned(10 downto 0) := (others => '0');
     signal sample_buf: std_logic_vector(n downto 0);
     
 begin
@@ -55,14 +42,14 @@ begin
             sample_buf <= (others => '0');
             
         elsif rising_edge(clk_in) then
-            if pwm_counter = 2047 then
+            if pwm_counter = 511 then
                 pwm_counter <= (others => '0');
                 sample_buf <= sample_in;
             else
                 pwm_counter <= pwm_counter + 1;
             end if;
             
-            if pwm_counter(n+2 downto 2) < unsigned(sample_buf) then
+            if pwm_counter(n downto 0) < unsigned(sample_buf) then
                 pwm_out <= '1';
             else
                 pwm_out <= '0';

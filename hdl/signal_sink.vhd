@@ -17,7 +17,8 @@ port (
     s_sync: in std_logic;
     sw: in std_logic_vector(2 downto 0);
     
-    pwm_out: out std_logic
+    pwm_out: out std_logic;
+    debug_out: out std_logic_vector(15 downto 0)
 );
 end signal_sink;
 
@@ -64,14 +65,16 @@ begin
     volume: process(all)
     begin
         case sw is
-            when 3x"0" => sample_out <= b"0" & sample_in(8 downto 1);
-            when 3x"1" => sample_out <= b"00" & sample_in(8 downto 2);
-            when 3x"2" => sample_out <= b"000" & sample_in(8 downto 3);
-            when 3x"3" => sample_out <= b"0000" & sample_in(8 downto 4);
-            when 3x"4" => sample_out <= b"00000" & sample_in(8 downto 5);
+            when 3x"0" => sample_out <= sample_in(8 downto 0);
+            when 3x"1" => sample_out <= b"0" & sample_in(8 downto 1);
+            when 3x"2" => sample_out <= b"00" & sample_in(8 downto 2);
+            when 3x"3" => sample_out <= b"000" & sample_in(8 downto 3);
+            when 3x"4" => sample_out <= b"0000" & sample_in(8 downto 4);
             when others => sample_out <= 9x"190";
             
         end case; 
     end process;
+    
+    debug_out(8 downto 0) <= sample_out;
 
 end rtl;

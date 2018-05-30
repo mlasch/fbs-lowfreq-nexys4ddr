@@ -25,10 +25,10 @@ architecture rtl of spc is
     -- shift register signals
     signal serial_buffer: std_logic_vector(8 downto 0);
     signal out_buffer: std_logic_vector(8 downto 0);
-    signal serial_cnt: unsigned(3 downto 0);
+    signal serial_cnt: unsigned(3 downto 0) := (others => '0');
     
     type state_t is (sync, shiftin, outbuf);
-    signal nstate: state_t;
+    signal nstate: state_t := sync;
     
     -- signals for clock divider
     signal clk_div_en: std_logic;
@@ -75,7 +75,6 @@ begin
                         nstate <= shiftin;
                     end if;
                     
-                    
                     serial_buffer <= (others => '0');
     
                 when shiftin =>
@@ -95,6 +94,10 @@ begin
                             end if;
         
                         end if;
+                        
+                    --else
+                        --nstate <= sync;
+                        
                     end if;
                 
                 when outbuf =>

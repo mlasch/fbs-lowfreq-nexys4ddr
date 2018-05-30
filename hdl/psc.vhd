@@ -35,7 +35,7 @@ architecture Behavioral of psc is
     --signal sample: std_logic_vector(8 downto 0);
     
     signal serial_buffer: std_logic_vector(8 downto 0);
-    signal serial_cnt: unsigned(3 downto 0);
+    signal serial_cnt: unsigned(3 downto 0) := (others => '0');
     signal clk_div_en: std_logic;
     signal clk_div_cnt: integer range 0 to 1000;
 begin
@@ -94,11 +94,6 @@ begin
                     s_sync <= '0';
                 end if;
                 
---                if serial_cnt = 0 then
---                    s_sync <= '1';
---                else
---                    s_sync <= '0';
---                end if;
             end if;
         end if;
     end process;
