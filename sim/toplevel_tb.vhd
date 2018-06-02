@@ -21,7 +21,12 @@ architecture tb of toplevel_tb is
         aud_pwm: out std_logic;
         aud_sd: out std_logic;
         SW: in std_logic_vector(15 downto 0);
-        LED: out std_logic_vector(15 downto 0)
+        LED: out std_logic_vector(15 downto 0);
+        
+        CA, CB, CC, CD, CE, CF, CG, DP: out std_logic;
+        AN: out std_logic_vector(7 downto 0);
+        sync_in, data_in: in std_logic;
+        sync_out, data_out: out std_logic
     );
     end component;
     
@@ -29,6 +34,8 @@ architecture tb of toplevel_tb is
     signal rst_n: std_logic;
     signal sw: std_logic_vector(15 downto 0) := x"0000";
     signal led: std_logic_vector(15 downto 0);
+    
+    signal golden_sync, golden_data: std_logic := '0';
     
 begin
 
@@ -52,7 +59,11 @@ begin
         aud_pwm => open,
         aud_sd => open,
         SW => sw,
-        LED => led
+        LED => led,
+        sync_in => golden_sync,
+        data_in => golden_data,
+        sync_out => golden_sync,
+        data_out => golden_data
     );
 
 end tb;

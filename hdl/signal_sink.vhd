@@ -42,9 +42,19 @@ architecture rtl of signal_sink is
     );
     end component;
     
+    component ila_0 is
+    port (
+        clk: in std_logic;
+        probe0: in std_logic_vector(0 downto 0);
+        probe1: in std_logic_vector(0 downto 0);
+        probe2: in std_logic_vector(8 downto 0)
+    );
+    end component;
+    
     signal sample_in, sample_out: std_logic_vector(8 downto 0);
     
 begin
+
     spc_inst: spc
     port map (
         clk_in => clk_in,
@@ -74,6 +84,14 @@ begin
             
         end case; 
     end process;
+    
+--    ila_debug_inst: ila_0
+--    port map (
+--        clk => clk_in,
+--        probe0(0) => s_in,
+--        probe1(0) => s_sync,
+--        probe2 => sample_in
+--    );
     
     debug_out(8 downto 0) <= sample_out;
 
